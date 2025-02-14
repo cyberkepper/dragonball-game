@@ -1,106 +1,96 @@
-// Obtenemos los datos de los personajes del fichero characters.json
-(async () => {
-    try {
-        const response = await fetch('./characters.json');
-        if (!response.ok) {
-            throw new Error('Network response was not ok ' + response.statusText);
-        }
-        
-        const characters = await response.json();
-        
-        console.log('Characters loaded successfully:', characters);
+// game.js
 
-        function loadCharacters() {
-            const charactersContainer = document.getElementById('characters-container');
-            
-            for (const character of characters) {
-                const card = document.createElement('div');
-                card.className = 'player-card';
-                card.innerHTML = `
-                    <h3>${character.name} (${character.race})</h3>
-                    <img src="${character.image}" alt="${character.name}">
-                `;
-                
-                charactersContainer.appendChild(card);
+const characterSelect = document.getElementById('characterSelect');
+const gameContainer = document.getElementById('game-container');
+
+let currentPlayerCharacter;
+
+fetch('characters.json')
+    .then(response => response.json())
+    .then(characters => {
+        characters.forEach(character => {
+            const option = document.createElement('option');
+            option.value = character.name;
+            option.textContent = character.name;
+            characterSelect.appendChild(option);
+        });
+
+        // Select the first character by default
+        if (characters.length > 0) {
+            startGame();
+        }
+    })
+    .catch(error => console.error('Error al cargar el archivo JSON:', error));
+
+function startGame() {
+    const playerCharacter = document.getElementById('characterSelect').value;
+
+    fetch('characters.json')
+        .then(response => response.json())
+        .then(characters => {
+            currentPlayerCharacter = characters.find(character => character.name === playerCharacter);
+
+            if (!currentPlayerCharacter) {
+                console.error(`El personaje ${playerCharacter} no se encontró.`);
+                return;
             }
-        }
-        
-        function startBattle() {
-            const player1Index = Math.floor(Math.random() * characters.length);
-            const player2Index = (player1Index + 1) % characters.length;
-        
-            const player1 = characters[player1Index];
-            const player2 = characters[player2Index];
-        
-            displayBattle(player1, player2);
-        }
-        
-        function displayBattle(player1, player2) {
-            const battleContainer = document.createElement('div');
-            battleContainer.className = 'battle-container';
-        
-            // Display player 1
-            const player1Card = document.createElement('div');
-            player1Card.className = 'player-card';
-            player1Card.innerHTML = `
-                <h3>${player1.name} (${player1.race})</h3>
-                <img src="${player1.image}" alt="${player1.name}">
-            `;
-        
-            // Display player 2
-            const player2Card = document.createElement('div');
-            player2Card.className = 'player-card';
-            player2Card.innerHTML = `
-                <h3>${player2.name} (${player2.race})</h3>
-                <img src="${player2.image}" alt="${player2.name}">
-            `;
-        
-            // Add players to battle container
-            battleContainer.appendChild(player1Card);
-            battleContainer.appendChild(player2Card);
-        
-            document.body.appendChild(battleContainer);
-        
-            startRounds(player1, player2);
-        }
-        
-        function startRounds(player1, player2) {
-            for (let i = 0; i < 3; i++) {
-                const attack = Math.floor(Math.random() * 10) + 1;
-                
-                if (Math.random() > 0.5) {
-                    // Player 1 attacks
-                    player2.Ki -= attack;
-                    console.log(`${player1.name} ataca a ${player2.name} por ${attack} de daño. ${player2.name} tiene ahora ${player2.Ki} Ki.`);
-                } else {
-                    // Player 2 attacks
-                    player1.Ki -= attack;
-                    console.log(`${player2.name} ataca a ${player1.name} por ${attack} de daño. ${player1.name} tiene ahora ${player1.Ki} Ki.`);
-                }
-            }
-        
-            determineWinner(player1, player2);
-        }
-        
-        function determineWinner(player1, player2) {
-            const winner = player1.Ki > player2.Ki ? player1 : player2;
-            console.log(`El ganador es ${winner.name}!`);
-            alert(`¡El ganador es ${winner.name}!`);
-        
-            // Reset the game
-            resetGame();
-        }
-        
-        function resetGame() {
-            currentTurn = 0;
-            battleRounds = 3;
-            document.body.innerHTML = ''; // Clear the DOM
-            loadCharacters(); // Reload characters
-        }
-        startBattle()
 
-    } catch (error) {
-        console.error('Error loading characters:', error.message);
-    }
-})();
+            // Convertir ki a un número
+            const { name, ki, image } = currentPlayerCharacter;
 
+            // Mostrar la tarjeta del jugador
+            showCharacterCard(name, image);
+
+            // Iniciar el combate y mostrar el enemigo
+            startCombat();
+        })
+        .catch(error => console.error('Error al cargar los personajes:', error));
+}
+
+function showCharacterCard(name, image) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+        <h2>${name}</h2>
+        <img src="${image}" alt="${name}">
+        <p>Power Level: ${currentPlayerCharacter.ki}</p>
+    `;
+    gameContainer.appendChild(card);
+}
+
+function startCombat() {
+    const opponentIndex = Math.floor(Math.random() * characters.length);
+    const opponent = characters[opponentIndex];
+
+    // Mostrar la tarjeta del enemigo
+    showOpponentCard(opponent);
+
+    // Simular el combate
+    battle(currentPlayerCharacter, opponent);
+}
+
+function showOpponentCard(opponent) {
+    const card = document.createElement('div');
+    card.className = 'card';
+    card.innerHTML = `
+        <h2>Enemy</h2>
+        <img src="${opponent.image}" alt="Enemy">
+        <p>Power Level: ${opponent.ki}</p>
+    `;
+    gameContainer.appendChild(card);
+}
+
+function battle(playerCharacter, opponent) {
+    console.log(`${playerCharacter.name} vs ${opponent.name}: Iniciando combate...`);
+    // Simular el resultado del combate
+    const result = Math.random() < 0.5 ? "Gana" : "Pierde";
+    console.log(`El resultado es: ${result}`);
+}
+
+const characters = [
+    { name: "Goku", ki: 9000, image: "/images/goku.webp" },
+    { name: "Vegeta", ki: 8500, image: "/images/vegeta_normal.webp" }
+];
+
+// Inicializar el juego
+startGame();
