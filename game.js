@@ -96,7 +96,7 @@ function simulateCombat() {
     setTimeout(() => {
         playerCard.classList.remove('player-win', 'enemy-lose');
         enemyCard.classList.remove('player-win', 'enemy-lose');
-    }, 2000);
+    }, 3000);
 }
 
 // Initialize the game with the first character selected
