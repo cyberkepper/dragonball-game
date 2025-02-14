@@ -83,6 +83,20 @@ function simulateCombat() {
     // Simulate a combat
     const result = Math.random() < 0.5 ? "Gana" : "Pierde";
     console.log(`El resultado es: ${result}`);
+
+    if (result === "Gana") {
+        playerCard.classList.add('player-win');
+        enemyCard.classList.add('enemy-lose');
+    } else {
+        playerCard.classList.add('enemy-lose');
+        enemyCard.classList.add('player-win');
+    }
+
+    // Reset the player and enemy cards after 2 seconds
+    setTimeout(() => {
+        playerCard.classList.remove('player-win', 'enemy-lose');
+        enemyCard.classList.remove('player-win', 'enemy-lose');
+    }, 2000);
 }
 
 // Initialize the game with the first character selected

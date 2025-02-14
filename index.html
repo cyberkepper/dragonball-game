@@ -4,14 +4,54 @@
     <meta charset="UTF-8">
     <title>Dragon Ball Character Battle</title>
     <style>
+        body {
+            background: url('/images/fondo.webp') no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            font-family: 'Dragon Ball Font', sans-serif; /* Ajusta la fuente según sea necesario */
+        }
+        .select-character {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            select{
+                padding: 10px;
+                font-size: 16px;
+                border-radius: 5px;
+                margin-bottom: 20px;
+            }
+            button {
+                padding: 10px 20px;
+                font-size: 16px;
+                border-radius: 5px;
+                background-color: #ff0000;
+                font-weight: bold;
+                border: none;
+                cursor: pointer;
+                text-transform: uppercase;
+                color: yellow;
+                transition: background-color 0.3s; /* Add transition for hover effect */
+            }
+            button:hover {
+                background-color: #e60000; /* Change button color on hover */
+            }
+        }
         .card {
+            background-color: white;
             border: 1px solid #ccc;
             padding: 20px;
             margin-right: 20px;
             max-width: 300px;
-            width: 100%;
-            text-align: center;
+            width: 48%;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            display: inline-block; /* Alinear al lado */
+            border-radius: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
         }
         .card img {
             max-height: 200px;
@@ -21,12 +61,22 @@
         #characterSelect, button {
             margin-bottom: 20px;
         }
+        .player-win {
+            background-color: lightgreen;
+            box-shadow: 0 4px 8px rgba(0, 255, 0, 0.3);
+        }
+        .enemy-lose {
+            background-color: lightcoral;
+            box-shadow: 0 4px 8px rgba(255, 0, 0, 0.3);
+        }
     </style>
 </head>
 <body>
-    <h1>Dragon Ball Character Battle</h1>
-    <select id="characterSelect"></select>
-    <button onclick="startGame()">Start Game</button>
+    <div class="select-character">
+        <h1>Dragon Ball Character Battle</h1>
+        <select id="characterSelect"></select>
+        <button onclick="startGame()">Start Game</button>
+    </div>
 
     <div id="game-container" style="display: flex; justify-content: space-around;">
         <!-- Player card will be displayed here -->
