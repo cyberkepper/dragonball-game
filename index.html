@@ -2,15 +2,21 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Dragon Ball Character Battle</title>
+    <title>Dragon Ball Character Battle</title>               
     <style>
         body {
             background: url('/images/fondo.webp') no-repeat center center fixed;
             -webkit-background-size: cover;
             -moz-background-size: cover;
             -o-background-size: cover;
-            background-size: cover;
-            font-family: 'Dragon Ball Font', sans-serif; /* Ajusta la fuente según sea necesario */
+            background-size: cover;   
+        }
+        h1 {          
+            font-size: 50px;
+        }
+        .logo {
+            width: 400px;
+            margin-bottom: 20px;
         }
         .select-character {
             display: flex;
@@ -73,7 +79,7 @@
 </head>
 <body>
     <div class="select-character">
-        <h1>Dragon Ball Character Battle</h1>
+        <img class="logo" src="/images/logo.png">
         <select id="characterSelect"></select>
         <button onclick="startGame()">Start Game</button>
     </div>
