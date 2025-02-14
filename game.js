@@ -1,7 +1,8 @@
 // game.js
 
 const characterSelect = document.getElementById('characterSelect');
-const gameContainer = document.getElementById('game-container');
+const playerCard = document.getElementById('playerCard');
+const enemyCard = document.getElementById('enemyCard');
 
 let currentPlayerCharacter;
 
@@ -35,62 +36,57 @@ function startGame() {
                 return;
             }
 
-            // Convertir ki a un número
-            const { name, ki, image } = currentPlayerCharacter;
+            // Update the player card
+            updatePlayerCard(currentPlayerCharacter);
 
-            // Mostrar la tarjeta del jugador
-            showCharacterCard(name, image);
-
-            // Iniciar el combate y mostrar el enemigo
+            // Start a new combat with a random enemy
             startCombat();
         })
         .catch(error => console.error('Error al cargar los personajes:', error));
 }
 
-function showCharacterCard(name, image) {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-        <h2>${name}</h2>
+function updatePlayerCard(character) {
+    const { name, ki, image } = character;
+    playerCard.innerHTML = `
         <img src="${image}" alt="${name}">
-        <p>Power Level: ${currentPlayerCharacter.ki}</p>
+        <p>Name: ${name}</p>
+        <p>Power Level: ${ki}</p>
     `;
-    gameContainer.appendChild(card);
 }
 
 function startCombat() {
-    const opponentIndex = Math.floor(Math.random() * characters.length);
-    const opponent = characters[opponentIndex];
+    // Clear the enemy card
+    enemyCard.innerHTML = '';
 
-    // Mostrar la tarjeta del enemigo
-    showOpponentCard(opponent);
+    fetch('characters.json')
+        .then(response => response.json())
+        .then(characters => {
+            // Generate a random enemy and update the enemy card
+            const randomEnemy = characters[Math.floor(Math.random() * characters.length)];
+            updateEnemyCard(randomEnemy);
 
-    // Simular el combate
-    battle(currentPlayerCharacter, opponent);
+            // Simulate a combat
+            simulateCombat();
+        })
 }
 
-function showOpponentCard(opponent) {
-    const card = document.createElement('div');
-    card.className = 'card';
-    card.innerHTML = `
-        <h2>Enemy</h2>
-        <img src="${opponent.image}" alt="Enemy">
-        <p>Power Level: ${opponent.ki}</p>
+function updateEnemyCard(enemy) {
+    const { name, ki, image } = enemy;
+    enemyCard.innerHTML = `
+        <img src="${image}" alt="${name}">
+        <p>Name: ${name}</p>
+        <p>Power Level: ${ki}</p>
     `;
-    gameContainer.appendChild(card);
 }
 
-function battle(playerCharacter, opponent) {
-    console.log(`${playerCharacter.name} vs ${opponent.name}: Iniciando combate...`);
-    // Simular el resultado del combate
+function simulateCombat() {
+    // Simulate a combat
     const result = Math.random() < 0.5 ? "Gana" : "Pierde";
     console.log(`El resultado es: ${result}`);
 }
 
-const characters = [
-    { name: "Goku", ki: 9000, image: "/images/goku.webp" },
-    { name: "Vegeta", ki: 8500, image: "/images/vegeta_normal.webp" }
-];
-
-// Inicializar el juego
+// Initialize the game with the first character selected
 startGame();
+
+// Update the player card when the character selection changes
+characterSelect.addEventListener('change', startGame);

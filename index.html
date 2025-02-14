@@ -7,7 +7,7 @@
         .card {
             border: 1px solid #ccc;
             padding: 20px;
-            margin-bottom: 20px;
+            margin-right: 20px;
             max-width: 300px;
             width: 100%;
             text-align: center;
@@ -28,8 +28,11 @@
     <select id="characterSelect"></select>
     <button onclick="startGame()">Start Game</button>
 
-    <div id="game-container">
-        <!-- Character card will be displayed here -->
+    <div id="game-container" style="display: flex; justify-content: space-around;">
+        <!-- Player card will be displayed here -->
+        <div class="card" id="playerCard"></div>
+        <!-- Enemy card will be displayed here -->
+        <div class="card" id="enemyCard"></div>
     </div>
 
     <script src="game.js"></script>
